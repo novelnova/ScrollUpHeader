@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll Up Header</title>
+    
+    <style>
+        body{
+            padding:0; 
+            margin:0;
+        }
+        header{ 
+            display:block;
+            position: fixed; 
+            background:#ddd; 
+            padding:0; 
+            width:100%; 
+            height:90px;
+            margin-top:0px;
+            transition: margin 200ms ease-in;
+        }
+        .scrolling-down header{margin-top:-90px;}
+        .scrolling-up header{margin-top:0px;}
+
+        main{
+            height:200vh; 
+            background:#ccc; 
+            padding:120px 30px;
+        }
+    </style>
+</head>
+<body>  
+    <header id="masthead">Header</header>
+    <main>Body</main>
+
+    <script>
+        //ref: https://developer.mozilla.org/en-US/docs/Web/API/Document/scroll_event
+
+        let lastScrollPosition = window.scrollY;
+        let currentScrollPosition = 0;
+        let ticking = false; // stops the event from overfiring see ref link
+
+        function scrollUpDown(scrollPos, lastScrollPos) {
+            // Do something with the scroll position
+            //console.log('scrolling' + scrollPos);
+            //console.log('scrolling last pos' + lastScrollPos);
+
+            if (scrollPos > lastScrollPos){
+                //SCROLLING UP
+                document.body.classList.remove('scrolling-up');
+                document.body.classList.add('scrolling-down');
+                console.log('SCROLLING DOWN');
+            
+            } else {
+                //SCROLLING DOWN
+                document.body.classList.add('scrolling-up');
+                document.body.classList.remove('scrolling-down');
+                console.log('SCROLLING UP');
+            }
+            
+        }
+
+        window.addEventListener('scroll', function(e) {
+            
+            currentScrollPosition = window.scrollY;
+
+            if (!ticking) {
+                window.requestAnimationFrame(function() {
+                    scrollUpDown(currentScrollPosition, lastScrollPosition);
+                    lastScrollPosition = currentScrollPosition;
+                    ticking = false;
+                });
+
+                ticking = true;
+            }
+        });
+
+       
+    </script>
+    
+    
+</body>
+</html>
